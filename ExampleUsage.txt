@@ -1,0 +1,21 @@
+Usage examples:
+
+#walking from the top left to bottom right, takes a pixel, gets its row/column neighbours (north, south, east, west) the given width away, and averages their colour.
+#only mutates a pixel once.
+#useful for blurring
+dotnet run averageNeighbours testImage.jpg result.jpg 1 true true true true
+
+#finds the 2 most frequent colours in the image, assumes the most common is the background image, and the 2nd most common is the foreground image
+#and changes all other colours to the background image.
+#useful for isolating foreground characters    
+dotnet run convertBiModal testImage.jpg result1.jpg
+
+#walking from the top left to bottom right, takes a mode2 (ie. 2nd most common colour) pixel, gets its row/column neighbours (north, south, east, west) the given width away, 
+#and sets their colour to the mode2 colour.  only mutates a pixel once.
+#useful for thickening foreground characters if the source image is already bimodal
+dotnet run convertNeighboursToMode2 testImage.jpg result2.jpg  1 true true true true
+
+#walking from the top left to bottom right, takes a mode2 (ie. 2nd most common colour) pixel, gets its row/column neighbours (north, south, east, west) the given width away,
+#finds all of those that are sandwiched between another mode2 pixel, and sets their colour to the mode2 colour.  only mutates a pixel once.
+#useful for filling in foreground characters if the source image is already bimodal
+dotnet run convertBetweenNeighboursToMode2 testImage.jpg result3.jpg  1 true true true true
