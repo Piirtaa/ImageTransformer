@@ -11,7 +11,6 @@ namespace ImageTransformer
 {
     public class Program
     {
-        // this is the entry point of your application
         static int Main(string[] args)
         {
             // AppRunner<T> where T is the class defining your commands
@@ -24,9 +23,13 @@ namespace ImageTransformer
         {
             using (Image<Rgba32> image = Image.Load<Rgba32>(sourceFile))
             {
-                //convert to bimodal 
+                //get the pixels, decorate with onetime mutability
                 Pixel[] pixels = image.GetPixelArray().AsOneTime();
+
+                //convert to bimodal 
                 pixels=pixels.Transform(PixelTransformation.ConvertToBiModal());
+                
+                //push it back to the image
                 pixels.ApplyToImage(image);
                 image.Save(destFile);
             }
@@ -37,14 +40,17 @@ namespace ImageTransformer
          {
             using (Image<Rgba32> image = Image.Load<Rgba32>(sourceFile))
             {
-                //convert to bimodal 
+                //get the pixels, decorate with onetime mutability
                 Pixel[] pixels = image.GetPixelArray().AsOneTime();
-                //see how many pixels were changed and how many were not
+
+                //get the modes
                 var bimodes = pixels.GetBiModes();
                 
                 //make all neighbour pixels to foreground     
                 pixels=pixels.Transform(PixelTransformation.ConvertNeighboursToCurrentColour(bimodes[1], 
                 width, north, south, east, west));
+
+                //push it back to the image
                 pixels.ApplyToImage(image);
                 image.Save(destFile);
             }
@@ -56,14 +62,17 @@ namespace ImageTransformer
          {
             using (Image<Rgba32> image = Image.Load<Rgba32>(sourceFile))
             {
-                //convert to bimodal 
+                //get the pixels, decorate with onetime mutability
                 Pixel[] pixels = image.GetPixelArray().AsOneTime();
-                //see how many pixels were changed and how many were not
+
+                //get colour frequency
                 var bimodes = pixels.GetBiModes();
                 
-                //make all neighbour pixels to foreground     
+                //transform inbetween neighbours to mode 2 colour   
                 pixels=pixels.Transform(PixelTransformation.ConvertInbetweenNeighboursToCurrentColour(bimodes[1], 
                 width, north, south, east, west));
+
+                //push back to image
                 pixels.ApplyToImage(image);
                 image.Save(destFile);
             }
@@ -74,13 +83,13 @@ namespace ImageTransformer
          {
             using (Image<Rgba32> image = Image.Load<Rgba32>(sourceFile))
             {
-                //convert to bimodal 
+                //get the pixels, decorate with onetime mutability
                 Pixel[] pixels = image.GetPixelArray().AsOneTime();
-                //see how many pixels were changed and how many were not
-                var bimodes = pixels.GetBiModes();
                 
-                //make all neighbour pixels to foreground     
+                //average the pixels    
                 pixels=pixels.Transform(PixelTransformation.AverageNeighbours(width, north, south, east, west));
+                
+                //push back to image
                 pixels.ApplyToImage(image);
                 image.Save(destFile);
             }
